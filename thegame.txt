@@ -1,0 +1,104 @@
+import pygame,sys,random
+from pygame.locals import *
+
+#Main Variables ========================================
+winwidth=820
+winheight=520
+fps=60
+
+#Colors ================================================
+blue=(0,0,255)
+red=(255,0,0)
+white=(255,255,255)
+black=(0,50,100)
+
+pygame.init()
+pygame.mouse.set_visible(0)
+disp=pygame.display.set_mode((winwidth,winheight))
+pygame.display.set_caption('The Ball Game')
+
+#draw ==================================================
+disp.fill(white)
+ball1=pygame.image.load('ball11.png').convert_alpha()
+ball1=pygame.transform.scale(ball1,(100,100))
+ball2=pygame.image.load('ball10.png').convert_alpha()
+ball2=pygame.transform.scale(ball2,(100,100))
+background=pygame.image.load('image.png').convert_alpha()
+background=pygame.transform.scale(background,(winwidth,winheight+400))
+
+def draw():
+    global x1,y1,x2,y2
+    disp.blit(background,(0,0))
+    disp.blit(ball1,(x1-50,y1-50))
+    disp.blit(ball2,(x2-50,y2-50))
+    pygame.draw.rect(disp,black,(0,0,10,winwidth))
+    pygame.draw.rect(disp,black,(0,0,winwidth,10))
+    pygame.draw.rect(disp,black,(0,winheight-10,winwidth,winheight))
+    pygame.draw.rect(disp,black,(winwidth-10,0,winwidth,winwidth))
+
+#ball variables ========================================
+velocity=0
+e=1
+
+#ball main =============================================
+x1,y1=50,50
+x2,y2=770,470
+speedx1,speedy1=0,0
+speedx2,speedy2=0,0
+
+# main game loop =======================================
+while True:
+    
+    fpsclock=pygame.time.Clock()
+    draw()       
+    for event in pygame.event.get():   
+        if event.type==KEYDOWN:
+            
+            if event.key==K_RIGHT:
+                speedx1=4
+            if event.key==K_LEFT:
+                speedx1=-4
+            if event.key==K_UP:
+                speedy1=-4
+            if event.key==K_DOWN:
+                speedy1=4
+                
+            if event.key==K_d:
+                speedx2=4
+            if event.key==K_a:
+                speedx2=-4
+            if event.key==K_w:
+                speedy2=-4
+            if event.key==K_s:
+                speedy2=4
+                
+        if event.type==KEYUP:
+            if event.key==K_RIGHT or event.key==K_LEFT:
+                speedx1=0
+            if event.key==K_UP or event.key==K_DOWN:
+                speedy1=0
+            if event.key==K_d or event.key==K_a:
+                speedx2=0
+            if event.key==K_w or event.key==K_s:
+                speedy2=0 
+        
+        if event.type==QUIT:
+            pygame.quit()
+            sys.exit()
+            
+    x1+=speedx1
+    y1+=speedy1
+    x2+=speedx2
+    y2+=speedy2
+    if x1>790 or x1<30:
+        speedx1=int(-speedx1*e)
+    if y1>490 or y1<30:
+        speedy1=int(-speedy1*e)
+    if x2>790 or x2<30:
+        speedx2=int(-speedx2*e)
+    if y2>490 or y2<30:
+        speedy2=int(-speedy2*e)
+    
+    pygame.display.update()
+    fpsclock.tick(fps)
+
